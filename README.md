@@ -34,13 +34,6 @@ a nadie; Application no conoce EF Core ni HTTP.
   misma cuenta, evitando pérdidas de actualización (*lost updates*). Ver
   `AccountRepository.GetForUpdateAsync` y `DepositCommandHandler` / `WithdrawCommandHandler`.
 
-### Por qué no hay AutoMapper
-
-Se evaluó AutoMapper pero se descartó: la versión libre de vulnerabilidades conocidas
-empuja hacia su modelo de licenciamiento comercial más reciente, y para DTOs planos como
-los de este dominio el mapeo manual (`Common/Mappings/MappingExtensions.cs`) es más
-explícito, no tiene *runtime reflection* y es trivial de depurar.
-
 ## Cómo levantar el proyecto
 
 ### Opción 1: Docker (recomendado)
