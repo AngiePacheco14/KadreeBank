@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: kadreebank-db
+    environment:
+      POSTGRES_DB: kadreebank
+      POSTGRES_USER: kadreebank
+      POSTGRES_PASSWORD: kadreebank
+    ports:
+      - "5432:5432"
+    volumes:
+      - kadreebank-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kadreebank -d kadreebank"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: src/KadreeBank.API/Dockerfile
+    container_name: kadreebank-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=kadreebank;Username=kadreebank;Password=kadreebank"
+    ports:
+      - "8080:8080"
+
+volumes:
+  kadreebank-db-data:
