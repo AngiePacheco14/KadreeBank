@@ -33,3 +33,7 @@ Thumbs.db
 ## Environment
 .env
 appsettings.*.local.json
+
+## Documentación interna (solo local, no se sube al repo, excepto README)
+*.md
+!README.md
