@@ -1,3 +1,5 @@
+using KadreeBank.Application.Accounts.Dtos;
+using KadreeBank.Application.Accounts.Queries.GetAccountsByCustomer;
 using KadreeBank.Application.Customers.Commands.CreateCustomer;
 using KadreeBank.Application.Customers.Dtos;
 using KadreeBank.Application.Customers.Queries.GetCustomerById;
@@ -39,5 +41,13 @@ public class CustomersController(ISender sender) : ControllerBase
     {
         var customer = await sender.Send(new GetCustomerByIdQuery(id), cancellationToken);
         return Ok(customer);
+    }
+
+    [HttpGet("{id:guid}/accounts")]
+    [ProducesResponseType<IReadOnlyList<AccountDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<AccountDto>>> GetAccounts(Guid id, CancellationToken cancellationToken)
+    {
+        var accounts = await sender.Send(new GetAccountsByCustomerQuery(id), cancellationToken);
+        return Ok(accounts);
     }
 }

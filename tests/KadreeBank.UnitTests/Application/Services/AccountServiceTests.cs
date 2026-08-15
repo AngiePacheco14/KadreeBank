@@ -178,4 +178,34 @@ public class AccountServiceTests
 
         await act.Should().ThrowAsync<NotFoundException>();
     }
+
+    // ---------- GetByCustomerIdAsync ----------
+
+    [Fact]
+    public async Task GetByCustomerIdAsync_WithExistingCustomer_ReturnsTheirAccounts()
+    {
+        var customer = NaturalCustomer();
+        var account = new Account
+        {
+            CustomerId = customer.Id, Type = AccountType.Savings, AccountNumber = "SAV-001", OriginCity = "Bogotá"
+        };
+        _customerRepository.Setup(r => r.GetByIdAsync(customer.Id, It.IsAny<CancellationToken>())).ReturnsAsync(customer);
+        _accountRepository.Setup(r => r.GetByCustomerIdAsync(customer.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([account]);
+
+        var result = await _sut.GetByCustomerIdAsync(customer.Id);
+
+        result.Should().ContainSingle(a => a.Id == account.Id);
+    }
+
+    [Fact]
+    public async Task GetByCustomerIdAsync_WhenCustomerDoesNotExist_ThrowsNotFound()
+    {
+        _customerRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Customer?)null);
+
+        var act = () => _sut.GetByCustomerIdAsync(Guid.NewGuid());
+
+        await act.Should().ThrowAsync<NotFoundException>();
+    }
 }

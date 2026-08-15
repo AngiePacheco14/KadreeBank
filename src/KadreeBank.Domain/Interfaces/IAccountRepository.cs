@@ -13,5 +13,7 @@ public interface IAccountRepository
     /// </summary>
     Task<Account?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<Account>> GetByCustomerIdAsync(Guid customerId, CancellationToken cancellationToken = default);
+
     Task AddAsync(Account account, CancellationToken cancellationToken = default);
 }

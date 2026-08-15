@@ -14,6 +14,11 @@ public class AccountRepository(KadreeBankDbContext dbContext) : IAccountReposito
             .FromSqlInterpolated($"""SELECT * FROM accounts WHERE "Id" = {id} FOR UPDATE""")
             .FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<Account>> GetByCustomerIdAsync(Guid customerId, CancellationToken cancellationToken = default) =>
+        await dbContext.Accounts
+            .Where(a => a.CustomerId == customerId)
+            .ToListAsync(cancellationToken);
+
     public async Task AddAsync(Account account, CancellationToken cancellationToken = default) =>
         await dbContext.Accounts.AddAsync(account, cancellationToken);
 }

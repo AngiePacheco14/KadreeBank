@@ -17,6 +17,8 @@ public interface IAccountService
 
     Task<BalanceDto> GetBalanceAsync(Guid accountId, CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<AccountDto>> GetByCustomerIdAsync(Guid customerId, CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<TransactionDto>> GetRecentTransactionsAsync(
         Guid accountId, int count, CancellationToken cancellationToken = default);
 

@@ -143,6 +143,17 @@ public class AccountService(IUnitOfWork unitOfWork) : IAccountService
         return transactions.Select(t => t.ToDto()).ToList();
     }
 
+    public async Task<IReadOnlyList<AccountDto>> GetByCustomerIdAsync(
+        Guid customerId, CancellationToken cancellationToken = default)
+    {
+        _ = await unitOfWork.Customers.GetByIdAsync(customerId, cancellationToken)
+            ?? throw new NotFoundException(nameof(Customer), customerId);
+
+        var accounts = await unitOfWork.Accounts.GetByCustomerIdAsync(customerId, cancellationToken);
+
+        return accounts.Select(a => a.ToDto()).ToList();
+    }
+
     public async Task<MonthlyStatementDto> GetMonthlyStatementAsync(
         Guid accountId, int year, int month, CancellationToken cancellationToken = default)
     {
