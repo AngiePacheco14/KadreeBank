@@ -18,7 +18,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularDevClient", policy =>
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins("http://localhost:4200", "https://kadree-bank-frontend.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
